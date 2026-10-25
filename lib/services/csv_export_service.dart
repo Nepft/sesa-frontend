@@ -25,7 +25,7 @@ class CsvExportService {
   }
 
   /// Menyusun nama file hasil yang sudah disanitasi; nama asli file pengguna
-  /// tidak dipakai mentah-mentah (RULES.md bagian "Tabel hasil").
+  /// tidak dipakai mentah-mentah (RULES.md bagian 7).
   String buildFileName(CsvAnalysisResult result) {
     final base = result.fileName.toLowerCase().replaceFirst(
       RegExp(r'\.csv$'),

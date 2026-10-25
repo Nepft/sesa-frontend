@@ -16,7 +16,7 @@ class SingleAnalysisResult {
   /// Confidence dari backend dalam rentang 0..1, atau `null` bila tidak ada.
   ///
   /// Nilai di luar rentang itu sengaja tidak ditampilkan karena artinya tidak
-  /// pasti (bisa jadi persentase) — RULES.md bagian 5 melarang angka
+  /// pasti (bisa jadi persentase); RULES.md bagian 5 melarang angka
   /// confidence yang dibuat-buat.
   final double? confidence;
 

@@ -138,26 +138,47 @@ void main() {
       expect(result.positiveCount, 1);
     });
 
-    test('memetakan lewat nomor baris ketika jumlah hasil berbeda dari parsing '
-        'lokal', () {
+    test('tetap memasangkan berurutan walau nomor baris lokal berjarak', () {
+      // Baris kosong di tengah file membuat nomor baris lokal berjarak, tetapi
+      // hasil backend tetap berurutan sesuai baris valid. Pemetaan harus
+      // mengikuti urutan, bukan nomor baris.
       final result = CsvAnalysisResult.fromBatchResponse(
         decodeObject(
           '{"total":2,'
-          '"results":[{"row":3,"label":"Positif"}],'
-          '"skipped":[{"row":2,"reason":"teks kosong"}]}',
+          '"results":[{"row":2,"label":"Negatif"},{"row":4,"label":"Positif"}],'
+          '"skipped":[{"row":3,"reason":"teks kosong"}]}',
         ),
         fileName: 'dataset.csv',
         parsed: parsedOf(['satu', 'dua']),
       );
 
-      // Baris data pertama = baris 2 menurut backend, jadi baris 3 menurut
-      // backend menunjuk ke baris data kedua menurut aplikasi.
-      expect(result.analyzedRows, 1);
-      expect(result.rows.single.rowNumber, 2);
-      expect(result.rows.single.text, 'dua');
-      expect(result.rows.single.label, SentimentLabel.positif);
-      expect(result.failedRows, 2);
+      expect(result.analyzedRows, 2);
+      expect(result.rows[0].rowNumber, 1);
+      expect(result.rows[0].text, 'satu');
+      expect(result.rows[0].label, SentimentLabel.negatif);
+      expect(result.rows[1].rowNumber, 2);
+      expect(result.rows[1].text, 'dua');
+      expect(result.rows[1].label, SentimentLabel.positif);
+      expect(result.failedRows, 1);
       expect(result.totalRows, 3);
+    });
+
+    test('melempar FormatException saat jumlah hasil berbeda dari baris valid',
+        () {
+      // Jumlah hasil tidak sama dengan baris valid berarti respons melanggar
+      // kontrak; lebih baik gagal jujur daripada menebak pasangan label.
+      expect(
+        () => CsvAnalysisResult.fromBatchResponse(
+          decodeObject(
+            '{"total":2,'
+            '"results":[{"row":3,"label":"Positif"}],'
+            '"skipped":[{"row":2,"reason":"teks kosong"}]}',
+          ),
+          fileName: 'dataset.csv',
+          parsed: parsedOf(['satu', 'dua']),
+        ),
+        throwsFormatException,
+      );
     });
 
     test('tidak membagi nol ketika tidak ada baris berlabel', () {

@@ -43,9 +43,8 @@ class ParsedCsvFile {
 class CsvFileService {
   const CsvFileService();
 
-  /// Memvalidasi ekstensi dan ukuran file.
-  ///
-  /// Mengembalikan pesan galat, atau `null` bila file lolos.
+  /// Memvalidasi ekstensi dan ukuran file; mengembalikan pesan galat, atau
+  /// `null` bila file lolos.
   String? validateFile({required String fileName, required int fileSizeBytes}) {
     if (!fileName.toLowerCase().endsWith('.csv')) {
       return 'Format file harus .csv. Pilih file dengan ekstensi .csv.';

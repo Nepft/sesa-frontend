@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'pulse_logo.dart';
 
-/// Header ringkas berisi logo dan nama produk saja, tanpa link navigasi
-/// (RULES.md bagian 4 — `components/Navbar.jsx`).
+/// Header ringkas berisi logo dan nama produk saja; tanpa link navigasi
+/// karena aplikasi hanya memiliki satu halaman.
 class AppNavbar extends StatelessWidget {
   const AppNavbar({super.key});
 
@@ -30,21 +30,23 @@ class AppNavbar extends StatelessWidget {
             child: const PulseLogo(size: 16),
           ),
           const SizedBox(width: 10),
-          Text.rich(
-            TextSpan(
-              children: [
-                const TextSpan(text: 'STEAM SENTIMENT '),
-                TextSpan(
-                  text: 'ANALYZER',
-                  style: TextStyle(color: AppColors.accent),
-                ),
-              ],
-            ),
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.6,
-              color: AppColors.textPrimary,
+          Flexible(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(text: 'STEAM SENTIMENT '),
+                  TextSpan(
+                    text: 'ANALYZER',
+                    style: TextStyle(color: AppColors.accent),
+                  ),
+                ],
+              ),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.6,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
         ],

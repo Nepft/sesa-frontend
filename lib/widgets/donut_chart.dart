@@ -7,7 +7,7 @@ import '../theme/app_theme.dart';
 /// Donut chart perbandingan sentimen.
 ///
 /// Dibuat dengan [CustomPaint] mengikuti keputusan versi web: satu donut saja,
-/// tanpa library chart tambahan (RULES.md bagian 6 — "Visualisasi").
+/// tanpa library chart tambahan.
 class DonutChart extends StatelessWidget {
   const DonutChart({
     super.key,
@@ -121,6 +121,25 @@ class DonutChartPainter extends CustomPainter {
           ..strokeWidth = stroke
           ..color = AppColors.negative,
       );
+    }
+
+    // Pemisah warna latar di titik sambungan arc: kontras langsung hijau-merah
+    // hanya 1.34:1, sehingga batas segmen perlu garis agar tetap terlihat.
+    final separator = Paint()
+      ..color = AppColors.background
+      ..strokeWidth = 3;
+    void drawSeparator(double angle) {
+      final direction = Offset(math.cos(angle), math.sin(angle));
+      canvas.drawLine(
+        center + direction * (radius - stroke / 2),
+        center + direction * (radius + stroke / 2),
+        separator,
+      );
+    }
+
+    drawSeparator(startAngle);
+    if (positiveSweep > 0 && negativeSweep > 0) {
+      drawSeparator(startAngle + positiveSweep);
     }
   }
 

@@ -3,7 +3,7 @@ import 'sentiment_label.dart';
 /// Satu baris hasil analisis CSV.
 ///
 /// Teks dan nomor baris berasal dari parsing file di sisi aplikasi, sedangkan
-/// [label] selalu diterima dari backend — tidak pernah ditebak.
+/// [label] selalu diterima dari backend, tidak pernah ditebak.
 class CsvReviewRow {
   const CsvReviewRow({
     required this.rowNumber,

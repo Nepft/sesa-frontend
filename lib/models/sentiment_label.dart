@@ -5,7 +5,7 @@ import '../theme/app_theme.dart';
 /// Kelas sentimen sesuai label model.
 ///
 /// Hanya dua nilai. Menambah kelas (misalnya "Netral") dilarang tanpa
-/// konfirmasi dari model final — lihat RULES.md bagian 1 dan 7.
+/// konfirmasi dari model final (RULES.md bagian 6).
 enum SentimentLabel {
   positif('Positif'),
   negatif('Negatif');
@@ -17,7 +17,7 @@ enum SentimentLabel {
   final String displayName;
 
   /// Warna status. Selalu ditemani [displayName] agar warna bukan satu-satunya
-  /// indikator hasil (RULES.md bagian 3 dan 8).
+  /// indikator hasil (RULES.md bagian 3).
   Color get color => switch (this) {
     SentimentLabel.positif => AppColors.positive,
     SentimentLabel.negatif => AppColors.negative,
@@ -36,8 +36,9 @@ enum SentimentLabel {
 
   /// Membaca label dari respons backend.
   ///
-  /// Pemetaan label dikunci di lapisan model (bukan di widget) sesuai RULES.md
-  /// bagian 7. Mengembalikan `null` bila label tidak dikenali, agar memicu
+  /// Pemetaan dipusatkan di model agar widget tidak mengurai respons
+  /// (RULES.md bagian 4); label kelas dikunci tanpa persetujuan model final
+  /// (bagian 6). Mengembalikan `null` bila label tidak dikenali, agar memicu
   /// error skema yang jujur alih-alih menebak hasil.
   static SentimentLabel? tryParse(Object? raw) {
     if (raw is! String) return null;

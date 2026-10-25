@@ -67,7 +67,11 @@ class _ComposerCardState extends State<ComposerCard> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (controller.isLoading) const LinearProgressIndicator(),
+          if (controller.isLoading)
+            Semantics(
+              label: 'Sedang menganalisis ulasan',
+              child: const LinearProgressIndicator(),
+            ),
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
             child: Column(
@@ -111,7 +115,7 @@ class _ComposerCardState extends State<ComposerCard> {
                     style: const TextStyle(
                       fontSize: 12.5,
                       height: 1.4,
-                      color: AppColors.negative,
+                      color: AppColors.negativeText,
                     ),
                   ),
                 ],
@@ -185,7 +189,7 @@ class _SendButton extends StatelessWidget {
       style: IconButton.styleFrom(
         backgroundColor: enabled ? AppColors.accent : AppColors.surfaceAlt,
         foregroundColor: enabled ? AppColors.onAccent : AppColors.textDim,
-        minimumSize: const Size(38, 38),
+        minimumSize: const Size(44, 44),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppColors.radiusSmall),
         ),

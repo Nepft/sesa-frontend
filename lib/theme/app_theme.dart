@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Token desain yang selaras dengan versi web SESA
-/// (`frontend/src/styles/global.css`) — palet gelap terinspirasi Steam.
+/// (`frontend/src/styles/global.css`): palet gelap terinspirasi Steam.
 abstract final class AppColors {
   /// Latar dasar halaman (#171A21).
   static const Color background = Color(0xFF171A21);
@@ -30,6 +30,11 @@ abstract final class AppColors {
   static const Color positiveSoft = Color(0x1F56B870);
   static const Color negative = Color(0xFFE0685F);
   static const Color negativeSoft = Color(0x1FE0685F);
+
+  /// Merah untuk teks kecil di atas [surface]. [negative] hanya mencapai
+  /// 4.49:1 terhadap surface (gagal AA 4.5 untuk teks 12,5px); variasi ini
+  /// mencapai 4.62:1 sehingga pesan validasi komposer tetap terbaca (WCAG AA).
+  static const Color negativeText = Color(0xFFE36A61);
 
   static const double radius = 8;
   static const double radiusSmall = 4;

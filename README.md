@@ -47,7 +47,7 @@ cd ../../api/sesa_backend
 python -m uvicorn app.main:app --reload                  # Emulator
 python -m uvicorn app.main:app --reload --host 0.0.0.0   # Perangkat fisik
 
-# 3. Jalankan aplikasi (default sudah mengarah ke host emulator)
+# 3. Jalankan aplikasi (base URL default: http://127.0.0.1:8000)
 flutter run
 
 # 4. Atau tentukan alamat backend sendiri
@@ -55,7 +55,7 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000   # Android Emulator
 flutter run --dart-define=API_BASE_URL=http://192.168.1.5:8000 # Perangkat fisik
 ```
 
-Base URL dikonfigurasi di satu tempat (`lib/services/api_config.dart`) melalui `--dart-define`, bukan ditulis berulang di banyak file. Nilai default `http://10.0.2.2:8000` adalah alamat host khusus Android Emulator — `localhost` pada perangkat menunjuk ke perangkat itu sendiri.
+Base URL dikonfigurasi di satu tempat (`lib/services/api_config.dart`) melalui `--dart-define`, bukan ditulis berulang di banyak file. Nilai default `http://127.0.0.1:8000` cocok untuk backend pada komputer yang sama; Android Emulator harus memakai `http://10.0.2.2:8000` karena `localhost` pada perangkat menunjuk ke perangkat itu sendiri.
 
 Sebelum menguji prediksi, pastikan backend sudah siap: `GET /ready` harus menjawab `{"model":"ready"}` (bila `not_ready`, aplikasi menampilkan status backend belum terhubung karena endpoint prediksi membalas 503).
 
@@ -64,7 +64,7 @@ Sebelum menguji prediksi, pastikan backend sudah siap: `GET /ready` harus menjaw
 ```bash
 dart format .            # Format kode
 flutter analyze          # Analisis statis
-flutter test             # Menjalankan pengujian (65 pengujian)
+flutter test             # Menjalankan pengujian (68 pengujian)
 flutter run              # Menjalankan aplikasi untuk pengembangan
 flutter build apk --debug   # Build APK debug
 ```
@@ -92,7 +92,7 @@ flutter build apk --debug   # Build APK debug
 
 ## 🔌 Integrasi Backend dan Model
 
-Model yang dilatih di Google Colab **tidak dijalankan langsung di aplikasi Flutter**. Untuk model Python/scikit-learn, siapkan backend Python (misalnya FastAPI) yang memuat pipeline preprocessing dan model final.
+Model yang dilatih di Google Colab **tidak dijalankan langsung di aplikasi Flutter**. Untuk model Python/scikit-learn, aplikasi memakai backend Python (FastAPI) yang memuat pipeline preprocessing dan model final.
 
 ```text
 Flutter Mobile App
@@ -144,7 +144,7 @@ Field `confidence` bersifat opsional dan saat ini tidak dikirim backend. Bila te
 Respons batch tidak memuat teks ulasan, sehingga teks dan nomor baris diambil dari hasil parsing file di sisi aplikasi, sementara label hanya datang dari backend:
 
 - Jumlah `results` sama dengan jumlah baris valid hasil parsing lokal → dipasangkan **berurutan** (backend mengirim hasil sesuai urutan input).
-- Jumlahnya berbeda → dipasangkan lewat nomor baris `row` yang menghitung header sebagai baris 1 (baris data pertama = 2). Baris tanpa pasangan dihitung gagal, bukan diberi label tebakan.
+- Jumlahnya berbeda → respons dianggap melanggar kontrak dan ditampilkan sebagai pesan respons tidak valid dengan tombol **Coba lagi**, bukan diberi label tebakan.
 - `skipped` dihitung sebagai baris dilewati, sehingga `Total = Dianalisis + baris dilewati`.
 
 Label yang dikenali aplikasi: `Positif`/`Positive` dan `Negatif`/`Negative` (tanpa membedakan huruf besar/kecil). Label lain dianggap tidak sah dan memunculkan pesan respons tidak valid — bukan hasil tebakan.
@@ -211,14 +211,15 @@ test/
 
 ## 🧪 Pengujian
 
-Pengujian yang tersedia (`flutter test`, 65 pengujian):
+Pengujian yang tersedia (`flutter test`, 68 pengujian):
 
 - Parsing model: label sah/tidak sah, confidence di luar rentang, ringkasan dihitung dari data yang diterima, dan pembagian nol.
 - Pembacaan CSV: koma dan newline di dalam kutipan, BOM, header huruf campuran, nomor baris yang dipertahankan saat ada baris dilewati, file tanpa kolom `content`, file kosong, encoding tidak didukung, dan file satu kolom.
 - Layanan API: kontrak request/response kedua endpoint (JSON dan multipart), pesan `detail` dari backend, status 404/500/503, server tidak terjangkau, respons bukan JSON, dan label tidak dikenali — semuanya dengan `MockClient`, tanpa jaringan.
-- Pemodelan batch: pemetaan hasil backend ke parsing lokal (berurutan maupun lewat nomor baris), baris yang dilewati, dan respons tanpa label sah.
+- Pemodelan batch: pemetaan hasil backend ke parsing lokal secara berurutan, baris yang dilewati, dan respons tanpa label sah.
 - Controller: teks tidak valid tidak memanggil API, teks tersimpan saat gagal dan dikosongkan saat sukses, lampiran CSV valid/ditolak, dan retry yang mengarah ke tindakan yang benar.
 - Halaman: empty state, counter karakter, validasi, hasil teks tunggal, status backend belum terhubung (tanpa hasil palsu), serta alur CSV lengkap dengan pagination.
+- Ketahanan layout: navbar, ringkasan, tabel, dan pagination tetap utuh (tanpa overflow) pada layar 360px berskala font 2x.
 
 Belum teruji otomatis: interaksi nyata pemilih file dan dialog simpan (platform channel), serta tampilan pada perangkat fisik.
 

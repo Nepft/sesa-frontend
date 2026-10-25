@@ -4,16 +4,19 @@
 /// banyak file:
 ///
 /// ```bash
-/// # Android Emulator (default): mengakses host komputer
+/// # Debug di komputer pengembang (memakai default 127.0.0.1)
+/// flutter run
+///
+/// # Android Emulator: host komputer lewat alamat khusus emulator
 /// flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
 ///
 /// # Perangkat fisik: gunakan alamat IP LAN komputer pengembang
 /// flutter run --dart-define=API_BASE_URL=http://192.168.1.5:8000
 /// ```
 abstract final class ApiConfig {
-  /// Default memakai alamat host khusus Android Emulator.
-  /// `localhost` pada perangkat menunjuk ke perangkat itu sendiri, bukan
-  /// komputer pengembang (RULES.md bagian 5).
+  /// Default `127.0.0.1` untuk berjalan di komputer pengembang; pada emulator
+  /// atau perangkat Android alamat itu menunjuk ke perangkat itu sendiri,
+  /// jadi wajib diganti lewat `--dart-define` (RULES.md bagian 5).
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'http://127.0.0.1:8000',

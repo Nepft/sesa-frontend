@@ -94,6 +94,8 @@ class SingleResultCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.only(left: 14),
           decoration: const BoxDecoration(
+            // Garis kiri menandai kutipan ulasan asli pengguna, bukan sekadar
+            // hiasan: memisahkan teks input dari teks antarmuka di sekitarnya.
             border: Border(left: BorderSide(color: AppColors.accent, width: 3)),
           ),
           child: Text(

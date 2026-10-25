@@ -7,7 +7,7 @@ import 'donut_chart.dart';
 
 /// Ringkasan hasil CSV: nama file, angka utama, dan proporsi sentimen.
 ///
-/// Selalu ditampilkan lebih dulu sebelum tabel detail (RULES.md bagian B).
+/// Selalu ditampilkan lebih dulu sebelum tabel detail (AGENT.md, Panduan UI/UX).
 class CsvSummaryCard extends StatelessWidget {
   const CsvSummaryCard({super.key, required this.result});
 
@@ -160,29 +160,35 @@ class _LegendRow extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              '${percentage.toStringAsFixed(1)}%',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: label.color,
-                fontFeatures: [FontFeature.tabularFigures()],
+        // FittedBox mengecilkannya bila angka besar + font skala besar
+        // melebihi lebar layar, alih-alih memicu overflow.
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                '${percentage.toStringAsFixed(1)}%',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: label.color,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              '$count ulasan',
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textDim,
-                fontFeatures: [FontFeature.tabularFigures()],
+              const SizedBox(width: 10),
+              Text(
+                '$count ulasan',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textDim,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

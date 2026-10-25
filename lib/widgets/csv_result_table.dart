@@ -9,7 +9,7 @@ import '../theme/app_theme.dart';
 /// pagination.
 ///
 /// Pagination membatasi baris yang dirender agar dataset besar tetap ringan
-/// (RULES.md bagian 7 — "Tabel hasil").
+/// (RULES.md bagian 7).
 class CsvResultTable extends StatefulWidget {
   const CsvResultTable({
     super.key,
@@ -100,18 +100,22 @@ class _CsvResultTableState extends State<CsvResultTable> {
               ),
             ),
             const SizedBox(width: 12),
-            OutlinedButton.icon(
-              onPressed: widget.isExporting || _rowCount == 0
-                  ? null
-                  : widget.onExport,
-              icon: widget.isExporting
-                  ? const SizedBox(
-                      width: 14,
-                      height: 14,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.download_rounded, size: 16),
-              label: const Text('Unduh hasil'),
+            // Flexible agar tombol ikut mengecil (labelnya membungkus) ketika
+            // layar sempit atau font dibesarkan, bukan memaksa overflow.
+            Flexible(
+              child: OutlinedButton.icon(
+                onPressed: widget.isExporting || _rowCount == 0
+                    ? null
+                    : widget.onExport,
+                icon: widget.isExporting
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.download_rounded, size: 16),
+                label: const Text('Unduh hasil'),
+              ),
             ),
           ],
         ),
@@ -154,7 +158,7 @@ class _CsvResultTableState extends State<CsvResultTable> {
               child: Text('Ulasan', style: style),
             ),
           ),
-          SizedBox(width: 96, child: Text('Sentimen', style: style)),
+          SizedBox(width: 60, child: Text('Sentimen', style: style)),
         ],
       ),
     );
@@ -195,37 +199,42 @@ class _CsvResultTableState extends State<CsvResultTable> {
               ),
             ),
           ),
-          SizedBox(width: 96, child: _SentimentTag(label: row.label)),
+          SizedBox(width: 60, child: _SentimentTag(label: row.label)),
         ],
       ),
     );
   }
 
   Widget _pagination() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        OutlinedButton(
-          onPressed: _page > 0 ? () => _changePage(_page - 1) : null,
-          child: const Text('Sebelumnya'),
-        ),
-        const SizedBox(width: 14),
-        Text(
-          '${_page + 1} / $_pageCount',
-          style: const TextStyle(
-            fontSize: 13,
-            color: AppColors.textDim,
-            fontFeatures: [FontFeature.tabularFigures()],
+    // FittedBox mengecilkannya bila skala font besar membuat baris melebihi
+    // lebar layar, alih-alih memicu overflow.
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          OutlinedButton(
+            onPressed: _page > 0 ? () => _changePage(_page - 1) : null,
+            child: const Text('Sebelumnya'),
           ),
-        ),
-        const SizedBox(width: 14),
-        OutlinedButton(
-          onPressed: _page < _pageCount - 1
-              ? () => _changePage(_page + 1)
-              : null,
-          child: const Text('Berikutnya'),
-        ),
-      ],
+          const SizedBox(width: 14),
+          Text(
+            '${_page + 1} / $_pageCount',
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textDim,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
+          ),
+          const SizedBox(width: 14),
+          OutlinedButton(
+            onPressed: _page < _pageCount - 1
+                ? () => _changePage(_page + 1)
+                : null,
+            child: const Text('Berikutnya'),
+          ),
+        ],
+      ),
     );
   }
 }

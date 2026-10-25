@@ -35,7 +35,7 @@ class CsvAnalysisResult {
 
   /// Penyebut persentase: jumlah baris yang benar-benar berlabel.
   ///
-  /// Disamakan dengan `positiveCount + negativeCount` (RULES.md bagian 6)
+  /// Disamakan dengan `positiveCount + negativeCount` (RULES.md bagian 7)
   /// sehingga ringkasan, legenda, dan donut chart selalu memakai data hasil
   /// yang sama persis.
   int get labeledRows => positiveCount + negativeCount;
@@ -59,12 +59,9 @@ class CsvAnalysisResult {
   ///
   /// Backend tidak mengirim isi teks, sehingga teks dan nomor baris diambil
   /// dari parsing lokal; label hanya boleh berasal dari backend. Label
-  /// dipasangkan ke baris lokal **berdasarkan urutan (index)**, karena backend
-  /// mengirim `results` sesuai urutan baris valid yang masuk dan jumlahnya
-  /// selalu sama. Memakai nomor baris backend justru salah saat ada baris
-  /// kosong di tengah file: parsing lokal memakai `skipEmptyLines` sehingga
-  /// nomor barisnya meleset dari backend. Nomor baris yang ditampilkan tetap
-  /// dari data lokal (lebih akurat bagi pengguna).
+  /// dipasangkan **berdasarkan urutan (index)**, bukan nomor baris: parsing
+  /// lokal memakai `skipEmptyLines`, jadi nomor baris bisa meleset begitu ada
+  /// baris kosong di tengah file.
   ///
   /// Melempar [FormatException] bila bentuk respons tidak sesuai kontrak, ada
   /// hasil tanpa label sentimen yang dikenali, atau jumlah hasil tidak sama
@@ -79,11 +76,9 @@ class CsvAnalysisResult {
         ? const []
         : _readItems(json['skipped'], 'skipped');
 
-    final backendRows = <int>[];
     final labels = <SentimentLabel>[];
     for (final item in results) {
-      final rawRow = item['row'];
-      if (rawRow is! num) {
+      if (item['row'] is! num) {
         throw const FormatException(
           'Respons server tidak menyertakan nomor baris pada hasil batch.',
         );
@@ -94,14 +89,10 @@ class CsvAnalysisResult {
           'Respons server mengirim baris tanpa label sentimen yang dikenali.',
         );
       }
-      backendRows.add(rawRow.toInt());
       labels.add(label);
     }
 
     final validRows = parsed.validRows;
-    // Backend mengirim results berurutan sesuai urutan baris valid yang masuk,
-    // sehingga jumlahnya selalu sama dengan validRows. Ketidakcocokan jumlah
-    // berarti respons melanggar kontrak, bukan kasus yang boleh ditebak.
     if (labels.length != validRows.length) {
       throw const FormatException(
         'Jumlah hasil batch tidak sama dengan jumlah baris valid pada file.',

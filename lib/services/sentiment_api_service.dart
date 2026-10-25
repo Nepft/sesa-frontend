@@ -35,8 +35,8 @@ class InvalidResponseException extends SentimentApiException {
 ///
 /// Kontrak yang dipakai (sudah diverifikasi terhadap backend FastAPI):
 ///
-/// - `POST /predict` — satu teks ulasan.
-/// - `POST /predict/batch` — file CSV sebagai multipart.
+/// - `POST /predict`: satu teks ulasan.
+/// - `POST /predict/batch`: file CSV sebagai multipart.
 ///
 /// Kegagalan koneksi, timeout, status HTTP di luar 2xx, dan respons yang tidak
 /// sesuai skema semuanya dipilihkan pesan galat yang dapat ditindaklanjuti
@@ -52,7 +52,7 @@ class SentimentApiService {
   final String baseUrl;
 
   static const String backendUnavailableMessage =
-      'Backend belum terhubung. Prediksi belum tersedia — jalankan server API '
+      'Backend belum terhubung. Prediksi belum tersedia. Jalankan server API '
       'lalu coba lagi.';
 
   /// Mengirim satu teks ulasan ke `POST /predict`.

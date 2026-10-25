@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-/// Glyph logo aplikasi — digambar dari path SVG yang sama dengan versi web
+/// Glyph logo aplikasi, digambar dari path SVG yang sama dengan versi web
 /// (`M3 12h4l3 8 4-16 3 8h4`), agar identitas visual tetap selaras.
 class PulseLogo extends StatelessWidget {
   const PulseLogo({

@@ -67,7 +67,6 @@ class AttachmentChip extends StatelessWidget {
             IconButton(
               onPressed: onRemove,
               tooltip: 'Lepaskan file',
-              visualDensity: VisualDensity.compact,
               icon: const Icon(Icons.close_rounded, size: 18),
               color: AppColors.textDim,
             ),

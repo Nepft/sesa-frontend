@@ -60,7 +60,7 @@ class CsvAttachment {
 /// State dan aksi kedua alur analisis (satu teks dan file CSV).
 ///
 /// Memakai `ChangeNotifier` bawaan Flutter sebagai state management paling
-/// sederhana — tanpa framework tambahan (RULES.md bagian 4 dan 9).
+/// sederhana, tanpa framework tambahan (RULES.md bagian 4).
 ///
 /// Prinsip yang dijaga:
 /// - Teks pengguna dikosongkan hanya setelah analisis berhasil; saat gagal
@@ -120,10 +120,6 @@ class AnalysisController extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  // ---------------------------------------------------------------------------
-  // Alur analisis satu teks
-  // ---------------------------------------------------------------------------
-
   Future<void> analyzeText() async {
     if (isLoading) return;
 
@@ -146,7 +142,7 @@ class AnalysisController extends ChangeNotifier {
       _singleResult = result;
       _csvResult = null;
       _phase = AnalysisPhase.idle;
-      // Teks hanya dikosongkan setelah analisis sukses (RULES.md bagian 5).
+      // Teks hanya dikosongkan setelah analisis sukses.
       textController.clear();
     } on BackendUnavailableException catch (error) {
       _phase = AnalysisPhase.idle;
@@ -173,10 +169,6 @@ class AnalysisController extends ChangeNotifier {
     }
     return null;
   }
-
-  // ---------------------------------------------------------------------------
-  // Alur analisis CSV
-  // ---------------------------------------------------------------------------
 
   /// Membuka pemilih file dan memproses file yang dipilih.
   ///
@@ -314,10 +306,6 @@ class AnalysisController extends ChangeNotifier {
     _composerMessage = null;
     _notify();
   }
-
-  // ---------------------------------------------------------------------------
-  // Aksi umum
-  // ---------------------------------------------------------------------------
 
   /// Mengirim sesuai konteks komposer: lampiran CSV atau teks ulasan.
   Future<void> submit() {
