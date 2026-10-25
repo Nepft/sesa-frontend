@@ -4,7 +4,7 @@ Aplikasi mobile berbasis **Flutter** untuk mengklasifikasikan sentimen ulasan ap
 
 > **Status pengembangan:** Aplikasi ini merupakan sisi antarmuka mobile. Model machine learning diakses melalui backend/API FastAPI (`api/sesa_backend`). Kedua endpoint kontrak — `POST /predict` dan `POST /predict/batch` — sudah diselaraskan dengan backend tersebut. Selama server tidak berjalan atau model belum siap, aplikasi menampilkan status "Backend belum terhubung" beserta tombol **Coba lagi** dan tidak pernah menampilkan hasil simulasi sebagai prediksi model.
 
-## ✨ Fitur Utama
+##  Fitur Utama
 
 - **Satu composer untuk dua alur** — pengguna menulis ulasan atau melampirkan file `.csv` di tempat yang sama. Tidak ada tab/pemilihan mode. Enter mengirim (pada papan ketik fisik), Shift+Enter menyisipkan baris baru, dan tersedia tombol kirim.
 - **Analisis satu ulasan** — label sentimen tampil di halaman yang sama, lengkap dengan kutipan ulasan dan confidence bila backend menyediakannya. Teks hanya dikosongkan setelah analisis berhasil; saat gagal teks tetap tersimpan.
@@ -15,7 +15,7 @@ Aplikasi mobile berbasis **Flutter** untuk mengklasifikasikan sentimen ulasan ap
 - **Desain mobile-first** — identitas visual Steam: tema gelap, aksen biru `#66C0F4`, garis hairline, composer tetap di bawah layar, serta logo pulse yang digambar dari path SVG yang sama dengan versi web.
 - **Penanganan status** — garis progres tipis saat menganalisis, counter karakter (maks 2000), pesan validasi di dekat komposer, status backend terhubung/belum di area hasil, dan tombol **Coba lagi** untuk mengulang tindakan yang gagal.
 
-## 🧰 Teknologi
+##  Teknologi
 
 | Teknologi | Peran |
 |---|---|
@@ -27,7 +27,7 @@ Aplikasi mobile berbasis **Flutter** untuk mengklasifikasikan sentimen ulasan ap
 | `setState` + `ChangeNotifier` | State management sederhana tanpa framework tambahan |
 | Python + FastAPI | Penyedia endpoint model machine learning (`api/sesa_backend`) |
 
-## 🚀 Menjalankan Aplikasi
+##  Menjalankan Aplikasi
 
 ### Prasyarat
 
@@ -69,7 +69,7 @@ flutter run              # Menjalankan aplikasi untuk pengembangan
 flutter build apk --debug   # Build APK debug
 ```
 
-## 📱 Alur Penggunaan
+##  Alur Penggunaan
 
 ### 1. Analisis satu ulasan
 
@@ -200,7 +200,7 @@ test/
 └── widget_test.dart               # Uji alur halaman (teks & CSV)
 ```
 
-## 🎨 Panduan Antarmuka Mobile
+##  Panduan Antarmuka Mobile
 
 - Pertahankan identitas visual terinspirasi Steam: tema gelap `#171A21`, permukaan `#1B2838`, aksen `#66C0F4`, dan garis hairline translusen. Token warna terpusat di `lib/theme/app_theme.dart` dan selaras dengan `frontend/src/styles/global.css`.
 - Utamakan satu kolom pada layar ponsel; lebar konten dibatasi 760 px agar tetap nyaman di layar lebar.
@@ -209,7 +209,7 @@ test/
 - Animasi dibatasi transisi 200 ms dan otomatis dinolkan ketika sistem meminta reduksi animasi.
 - Jangan menyamarkan hasil simulasi sebagai hasil prediksi model.
 
-## 🧪 Pengujian
+##  Pengujian
 
 Pengujian yang tersedia (`flutter test`, 68 pengujian):
 
@@ -223,7 +223,7 @@ Pengujian yang tersedia (`flutter test`, 68 pengujian):
 
 Belum teruji otomatis: interaksi nyata pemilih file dan dialog simpan (platform channel), serta tampilan pada perangkat fisik.
 
-## 🗺️ Roadmap
+##  Roadmap
 
 - [x] Menyelesaikan antarmuka mobile Flutter yang mengikuti identitas visual versi web.
 - [x] Menetapkan kontrak request/response antara Flutter dan backend.
