@@ -9,6 +9,7 @@ class CsvReviewRow {
     required this.rowNumber,
     required this.text,
     required this.label,
+    this.confidence,
   });
 
   /// Nomor baris pada file sumber (baris data pertama = 1, tanpa header).
@@ -17,4 +18,8 @@ class CsvReviewRow {
   final String text;
 
   final SentimentLabel label;
+
+  /// Persentase confidence per label (0-100) dari backend; `null` bila baris
+  /// hasil tidak memuatnya atau nilainya tidak valid.
+  final Map<String, double>? confidence;
 }

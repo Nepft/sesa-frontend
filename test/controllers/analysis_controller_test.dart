@@ -72,7 +72,7 @@ void main() {
         final controller = buildController(
           MockClient((request) async {
             return http.Response(
-              '{"label":"Positif","confidence":0.9}',
+              '{"label":"Positif","confidence":{"Negatif":10.0,"Positif":90.0}}',
               200,
               headers: {'content-type': 'application/json'},
             );
@@ -223,7 +223,7 @@ void main() {
           final body = isBatch
               ? '{"total":1,'
                     '"results":[{"row":2,"label":"Negatif"}],"skipped":[]}'
-              : '{"label":"Positif","confidence":0.9}';
+              : '{"label":"Positif","confidence":{"Negatif":10.0,"Positif":90.0}}';
           return http.Response(
             body,
             200,

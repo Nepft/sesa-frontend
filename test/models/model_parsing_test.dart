@@ -40,14 +40,15 @@ void main() {
     test('membaca label, teks, dan confidence yang valid', () {
       final result = SingleAnalysisResult.fromJson(
         decodeObject(
-          '{"text":"game seru","label":"Positif","confidence":0.94}',
+          '{"text":"game seru","label":"Positif",'
+          '"confidence":{"Negatif":6.0,"Positif":94.0}}',
         ),
         submittedText: 'game seru',
       );
 
       expect(result.label, SentimentLabel.positif);
       expect(result.text, 'game seru');
-      expect(result.confidence, 0.94);
+      expect(result.confidence, {'Negatif': 6.0, 'Positif': 94.0});
     });
 
     test('mengembalikan teks kiriman bila backend tidak mengembalikannya', () {
@@ -60,9 +61,22 @@ void main() {
       expect(result.confidence, isNull);
     });
 
-    test('mengabaikan confidence di luar rentang probabilitas', () {
+    test('mengabaikan confidence di luar rentang persentase 0-100', () {
       final result = SingleAnalysisResult.fromJson(
-        decodeObject('{"label":"Positif","confidence":94}'),
+        decodeObject(
+          '{"label":"Positif","confidence":{"Negatif":6,"Positif":140}}',
+        ),
+        submittedText: 'ulasan',
+      );
+
+      expect(result.confidence, isNull);
+    });
+
+    test('mengabaikan confidence berbentuk skalar (format lama)', () {
+      // Backend lama tidak pernah mengirim confidence; skalar 0.94 bukan
+      // persentase sehingga jangan sampai ditampilkan sebagai 0.94%.
+      final result = SingleAnalysisResult.fromJson(
+        decodeObject('{"label":"Positif","confidence":0.94}'),
         submittedText: 'ulasan',
       );
 
@@ -114,6 +128,42 @@ void main() {
       expect(result.labeledRows, 3);
       expect(result.positivePercentage, closeTo(66.67, 0.01));
       expect(result.negativePercentage, closeTo(33.33, 0.01));
+      // Tanpa field confidence pada respons, baris tetap sah tanpa persentase.
+      expect(result.rows.every((row) => row.confidence == null), isTrue);
+    });
+
+    test('membaca confidence per baris hasil', () {
+      final result = CsvAnalysisResult.fromBatchResponse(
+        decodeObject(
+          '{"total":2,'
+          '"results":['
+          '{"row":2,"label":"Positif","confidence":'
+          '{"Negatif":18.4,"Positif":81.6}},'
+          '{"row":3,"label":"Negatif","confidence":'
+          '{"Negatif":87.1,"Positif":12.9}}],'
+          '"skipped":[]}',
+        ),
+        fileName: 'dataset.csv',
+        parsed: parsedOf(['bagus', 'jelek']),
+      );
+
+      expect(result.rows[0].confidence, {'Negatif': 18.4, 'Positif': 81.6});
+      expect(result.rows[1].confidence, {'Negatif': 87.1, 'Positif': 12.9});
+    });
+
+    test('mengabaikan confidence baris yang tidak valid', () {
+      final result = CsvAnalysisResult.fromBatchResponse(
+        decodeObject(
+          '{"total":1,'
+          '"results":[{"row":2,"label":"Positif","confidence":'
+          '{"Negatif":-3,"Positif":999}}],'
+          '"skipped":[]}',
+        ),
+        fileName: 'dataset.csv',
+        parsed: parsedOf(['bagus']),
+      );
+
+      expect(result.rows[0].confidence, isNull);
     });
 
     test('menghitung baris yang dilewati backend sebagai baris gagal', () {

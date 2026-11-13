@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/confidence_percentages.dart';
 import '../models/csv_analysis_result.dart';
 import '../models/csv_review_row.dart';
 import '../models/sentiment_label.dart';
@@ -159,6 +160,7 @@ class _CsvResultTableState extends State<CsvResultTable> {
             ),
           ),
           SizedBox(width: 60, child: Text('Sentimen', style: style)),
+          SizedBox(width: 96, child: Text('Confidence', style: style)),
         ],
       ),
     );
@@ -200,40 +202,48 @@ class _CsvResultTableState extends State<CsvResultTable> {
             ),
           ),
           SizedBox(width: 60, child: _SentimentTag(label: row.label)),
+          SizedBox(
+            width: 96,
+            child: _ConfidenceCell(confidence: row.confidence),
+          ),
         ],
       ),
     );
   }
 
   Widget _pagination() {
+    // Align membuat baris tetap selebar layar agar tombol terpusat;
     // FittedBox mengecilkannya bila skala font besar membuat baris melebihi
     // lebar layar, alih-alih memicu overflow.
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          OutlinedButton(
-            onPressed: _page > 0 ? () => _changePage(_page - 1) : null,
-            child: const Text('Sebelumnya'),
-          ),
-          const SizedBox(width: 14),
-          Text(
-            '${_page + 1} / $_pageCount',
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.textDim,
-              fontFeatures: [FontFeature.tabularFigures()],
+    return Align(
+      alignment: Alignment.center,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton(
+              onPressed: _page > 0 ? () => _changePage(_page - 1) : null,
+              child: const Text('Sebelumnya'),
             ),
-          ),
-          const SizedBox(width: 14),
-          OutlinedButton(
-            onPressed: _page < _pageCount - 1
-                ? () => _changePage(_page + 1)
-                : null,
-            child: const Text('Berikutnya'),
-          ),
-        ],
+            const SizedBox(width: 14),
+            Text(
+              '${_page + 1} / $_pageCount',
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textDim,
+                fontFeatures: [FontFeature.tabularFigures()],
+              ),
+            ),
+            const SizedBox(width: 14),
+            OutlinedButton(
+              onPressed: _page < _pageCount - 1
+                  ? () => _changePage(_page + 1)
+                  : null,
+              child: const Text('Berikutnya'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -260,6 +270,39 @@ class _SentimentTag extends StatelessWidget {
           color: label.color,
         ),
       ),
+    );
+  }
+}
+
+class _ConfidenceCell extends StatelessWidget {
+  const _ConfidenceCell({required this.confidence});
+
+  final Map<String, double>? confidence;
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = confidenceEntries(confidence);
+    if (entries.isEmpty) {
+      // Tanpa probabilitas dari backend: tanda kosong, bukan angka karangan.
+      return const Text(
+        '—',
+        style: TextStyle(fontSize: 13, color: AppColors.textDim),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final entry in entries)
+          Text(
+            '${entry.key.displayName} ${entry.value.toStringAsFixed(1)}%',
+            style: const TextStyle(
+              fontSize: 12,
+              height: 1.5,
+              color: AppColors.textDim,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
+          ),
+      ],
     );
   }
 }

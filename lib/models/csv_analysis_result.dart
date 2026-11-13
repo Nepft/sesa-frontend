@@ -1,4 +1,5 @@
 import '../services/csv_file_service.dart';
+import 'confidence_percentages.dart';
 import 'csv_review_row.dart';
 import 'sentiment_label.dart';
 
@@ -52,7 +53,8 @@ class CsvAnalysisResult {
   /// ```json
   /// {
   ///   "total": 2,
-  ///   "results": [ { "row": 2, "label": "Positif" } ],
+  ///   "results": [ { "row": 2, "label": "Positif",
+  ///                  "confidence": { "Negatif": 18.4, "Positif": 81.6 } } ],
   ///   "skipped": [ { "row": 5, "reason": "..." } ]
   /// }
   /// ```
@@ -77,6 +79,7 @@ class CsvAnalysisResult {
         : _readItems(json['skipped'], 'skipped');
 
     final labels = <SentimentLabel>[];
+    final confidences = <Map<String, double>?>[];
     for (final item in results) {
       if (item['row'] is! num) {
         throw const FormatException(
@@ -90,6 +93,7 @@ class CsvAnalysisResult {
         );
       }
       labels.add(label);
+      confidences.add(tryParseConfidence(item['confidence']));
     }
 
     final validRows = parsed.validRows;
@@ -106,6 +110,7 @@ class CsvAnalysisResult {
           rowNumber: validRows[index].rowNumber,
           text: validRows[index].text,
           label: labels[index],
+          confidence: confidences[index],
         ),
       );
     }

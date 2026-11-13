@@ -79,7 +79,8 @@ void main() {
     final controller = buildController(
       MockClient((request) async {
         return http.Response(
-          '{"text":"steam bagus","label":"Positif","confidence":0.94}',
+          '{"text":"steam bagus","label":"Positif","confidence":'
+          '{"Negatif":6.0,"Positif":94.0}}',
           200,
           headers: {'content-type': 'application/json'},
         );
@@ -100,7 +101,7 @@ void main() {
     expect(find.text('Hasil Analisis'), findsOneWidget);
     expect(find.text('Positif'), findsOneWidget);
     expect(find.text('steam bagus'), findsOneWidget);
-    expect(find.text('Confidence 94%'), findsOneWidget);
+    expect(find.text('Confidence Positif 94.0% · Negatif 6.0%'), findsOneWidget);
     expect(controller.textController.text, isEmpty);
     expect(find.byType(TextField), findsOneWidget);
   });

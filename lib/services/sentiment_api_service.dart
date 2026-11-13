@@ -63,11 +63,13 @@ class SentimentApiService {
   /// // request
   /// { "text": "The game is fun." }
   /// // response
-  /// { "text": "The game is fun.", "label": "Positif" }
+  /// { "text": "The game is fun.", "label": "Positif",
+  ///   "confidence": { "Negatif": 18.4, "Positif": 81.6 } }
   /// ```
   ///
-  /// Field `confidence` bersifat opsional; bila backend menyertakannya pada
-  /// rentang 0..1, nilai itu ikut ditampilkan.
+  /// Field `confidence` bersifat opsional: persentase per label (0-100) hasil
+  /// `predict_proba` backend. Bila tidak dikirim atau tidak valid, nilainya
+  /// `null` dan UI menyembunyikan baris confidence.
   Future<SingleAnalysisResult> predictText(String text) async {
     final response = await _post(ApiConfig.predictPath, {'text': text});
     _ensureSuccess(response.statusCode, response.body);
@@ -86,7 +88,8 @@ class SentimentApiService {
   /// // response
   /// {
   ///   "total": 250,
-  ///   "results": [ { "row": 2, "label": "Positif" } ],
+  ///   "results": [ { "row": 2, "label": "Positif",
+  ///                  "confidence": { "Negatif": 18.4, "Positif": 81.6 } } ],
   ///   "skipped": [ { "row": 5, "reason": "baris kosong" } ]
   /// }
   /// ```

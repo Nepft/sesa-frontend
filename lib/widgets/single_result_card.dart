@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/confidence_percentages.dart';
 import '../models/single_analysis_result.dart';
 import '../theme/app_theme.dart';
 
@@ -12,7 +13,7 @@ class SingleResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = result.label;
-    final confidence = result.confidence;
+    final confidenceLine = formatConfidenceLine(result.confidence);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,10 +63,10 @@ class SingleResultCard extends StatelessWidget {
                       color: label.color,
                     ),
                   ),
-                  if (confidence != null) ...[
+                  if (confidenceLine != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'Confidence ${(confidence * 100).toStringAsFixed(0)}%',
+                      'Confidence $confidenceLine',
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textDim,

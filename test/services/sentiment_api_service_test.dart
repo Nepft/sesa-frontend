@@ -29,7 +29,8 @@ void main() {
         MockClient((request) async {
           captured = request;
           return http.Response(
-            '{"text":"game menyenangkan","label":"Positif","confidence":0.87}',
+          '{"text":"game menyenangkan","label":"Positif","confidence":'
+          '{"Negatif":13.0,"Positif":87.0}}',
             200,
             headers: {'content-type': 'application/json'},
           );
@@ -44,7 +45,7 @@ void main() {
       expect(captured!.headers['content-type'], contains('application/json'));
       expect(jsonDecode(captured!.body), {'text': 'game menyenangkan'});
       expect(result.label, SentimentLabel.positif);
-      expect(result.confidence, 0.87);
+      expect(result.confidence, {'Negatif': 13.0, 'Positif': 87.0});
     });
 
     test(

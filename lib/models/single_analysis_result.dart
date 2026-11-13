@@ -1,3 +1,4 @@
+import 'confidence_percentages.dart';
 import 'sentiment_label.dart';
 
 /// Hasil analisis satu teks ulasan yang berasal dari respons backend.
@@ -13,24 +14,19 @@ class SingleAnalysisResult {
 
   final SentimentLabel label;
 
-  /// Confidence dari backend dalam rentang 0..1, atau `null` bila tidak ada.
-  ///
-  /// Nilai di luar rentang itu sengaja tidak ditampilkan karena artinya tidak
-  /// pasti (bisa jadi persentase); RULES.md bagian 5 melarang angka
-  /// confidence yang dibuat-buat.
-  final double? confidence;
+  /// Persentase confidence per label (0-100) dari backend, atau `null` bila
+  /// tidak dikirim / tidak valid sehingga baris confidence disembunyikan.
+  final Map<String, double>? confidence;
 
   /// Membaca respons `POST /predict` sesuai kontrak backend:
   ///
   /// ```json
-  /// { "text": "ulasan seperti dikirim", "label": "Positif" }
+  /// { "text": "ulasan seperti dikirim", "label": "Positif",
+  ///   "confidence": { "Negatif": 18.4, "Positif": 81.6 } }
   /// ```
   ///
-  /// `confidence` tidak dikirim backend saat ini; bila suatu saat tersedia dan
-  /// berada pada rentang 0..1, nilai itu dipakai.
-  ///
-  /// Melempar [FormatException] bila label sentimen tidak dikenali agar
-  /// lapisan service mengubahnya menjadi galat respons yang jelas.
+  /// `confidence` bersifat opsional (bisa `null` pada artefak model tanpa
+  /// probabilitas); label yang tidak dikenal tetap membuat [FormatException].
   factory SingleAnalysisResult.fromJson(
     Map<String, dynamic> json, {
     required String submittedText,
@@ -48,14 +44,7 @@ class SingleAnalysisResult {
           ? rawText
           : submittedText,
       label: label,
-      confidence: _readConfidence(json['confidence']),
+      confidence: tryParseConfidence(json['confidence']),
     );
-  }
-
-  static double? _readConfidence(Object? raw) {
-    if (raw is! num) return null;
-    final value = raw.toDouble();
-    if (value < 0 || value > 1) return null;
-    return value;
   }
 }
