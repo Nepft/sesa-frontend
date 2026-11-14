@@ -64,7 +64,7 @@ Sebelum menguji prediksi, pastikan backend sudah siap: `GET /ready` harus menjaw
 ```bash
 dart format .            # Format kode
 flutter analyze          # Analisis statis
-flutter test             # Menjalankan pengujian (68 pengujian)
+flutter test             # Menjalankan pengujian (71 pengujian)
 flutter run              # Menjalankan aplikasi untuk pengembangan
 flutter build apk --debug   # Build APK debug
 ```
@@ -211,7 +211,7 @@ test/
 
 ##  Pengujian
 
-Pengujian yang tersedia (`flutter test`, 68 pengujian):
+Pengujian yang tersedia (`flutter test`, 71 pengujian):
 
 - Parsing model: label sah/tidak sah, confidence di luar rentang, ringkasan dihitung dari data yang diterima, dan pembagian nol.
 - Pembacaan CSV: koma dan newline di dalam kutipan, BOM, header huruf campuran, nomor baris yang dipertahankan saat ada baris dilewati, file tanpa kolom `content`, file kosong, encoding tidak didukung, dan file satu kolom.

@@ -100,7 +100,7 @@ class _CsvResultTableState extends State<CsvResultTable> {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 85),
             // Flexible agar tombol ikut mengecil (labelnya membungkus) ketika
             // layar sempit atau font dibesarkan, bukan memaksa overflow.
             Flexible(
@@ -159,8 +159,9 @@ class _CsvResultTableState extends State<CsvResultTable> {
               child: Text('Ulasan', style: style),
             ),
           ),
-          SizedBox(width: 60, child: Text('Sentimen', style: style)),
-          SizedBox(width: 96, child: Text('Confidence', style: style)),
+          SizedBox(width: 55, child: Text('Sentimen', style: style)),
+          SizedBox(width: 12),
+          SizedBox(width: 80, child: Text('Confidence', style: style)),
         ],
       ),
     );
@@ -201,9 +202,10 @@ class _CsvResultTableState extends State<CsvResultTable> {
               ),
             ),
           ),
-          SizedBox(width: 60, child: _SentimentTag(label: row.label)),
+          SizedBox(width: 55, child: _SentimentTag(label: row.label)),
+          const SizedBox(width: 12),
           SizedBox(
-            width: 96,
+            width: 80,
             child: _ConfidenceCell(confidence: row.confidence),
           ),
         ],

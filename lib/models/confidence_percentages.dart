@@ -40,6 +40,9 @@ String? formatConfidenceLine(Map<String, double>? confidence) {
   final entries = confidenceEntries(confidence);
   if (entries.isEmpty) return null;
   return entries
-      .map((entry) => '${entry.key.displayName} ${entry.value.toStringAsFixed(1)}%')
+      .map(
+        (entry) =>
+            '${entry.key.displayName} ${entry.value.toStringAsFixed(1)}%',
+      )
       .join(' · ');
 }
