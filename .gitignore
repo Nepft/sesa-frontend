@@ -49,3 +49,6 @@ app.*.map.json
 
 .opencode/
 .anti-slop/
+anti-slop/
+AGENT.md
+RULES.md
